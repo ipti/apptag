@@ -14,7 +14,7 @@
         android:paddingRight="24dp"
         android:weightSum="1">
 
-        <ImageView android:src="@drawable/logo"
+        <ImageView android:src="@drawable/logotag"
             android:layout_width="150dp"
             android:layout_height="140dp"
             android:layout_marginBottom="24dp"

@@ -58,6 +58,16 @@ public class MainActivity extends AppCompatActivity {
         //Initializing NavigationView
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
 
+
+        //Dado artificial
+        if(username.equals("Professor")){
+            setProperMenu(navigationView, 1);
+        }else{
+            setProperMenu(navigationView, 2);
+        }
+
+
+
         //setting Username TextView
         View header = navigationView.getHeaderView(0);
         textUser = (TextView) header.findViewById(R.id.user);
@@ -83,8 +93,8 @@ public class MainActivity extends AppCompatActivity {
 
 
                     //Replacing the main content with ContentFragment Which is our Inbox View;
-                    case R.id.inbox:
-                        Toast.makeText(getApplicationContext(),"Inbox Selected",Toast.LENGTH_SHORT).show();
+                    case R.id.cadnota:
+                        Toast.makeText(getApplicationContext(),"Cadastrar Nota Selecionado",Toast.LENGTH_SHORT).show();
                         MainFragment fragment = new MainFragment();
                         android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                         fragmentTransaction.replace(R.id.frame,fragment);
@@ -93,26 +103,17 @@ public class MainActivity extends AppCompatActivity {
 
                     // For rest of the options we just show a toast on click
 
-                    case R.id.starred:
-                        Toast.makeText(getApplicationContext(),"Stared Selected",Toast.LENGTH_SHORT).show();
+                    case R.id.boletim:
+                        Toast.makeText(getApplicationContext(),"Boletim Selecionado",Toast.LENGTH_SHORT).show();
                         return true;
-                    case R.id.sent_mail:
-                        Toast.makeText(getApplicationContext(),"Send Selected",Toast.LENGTH_SHORT).show();
+                    case R.id.cadfreq:
+                        Toast.makeText(getApplicationContext(),"Cadastrar Frequencia Selecionado",Toast.LENGTH_SHORT).show();
                         return true;
-                    case R.id.drafts:
-                        Toast.makeText(getApplicationContext(),"Drafts Selected",Toast.LENGTH_SHORT).show();
-                        return true;
-                    case R.id.allmail:
-                        Toast.makeText(getApplicationContext(),"All Mail Selected",Toast.LENGTH_SHORT).show();
-                        return true;
-                    case R.id.trash:
-                        Toast.makeText(getApplicationContext(),"Trash Selected",Toast.LENGTH_SHORT).show();
-                        return true;
-                    case R.id.spam:
-                        Toast.makeText(getApplicationContext(),"Spam Selected",Toast.LENGTH_SHORT).show();
+                    case R.id.listfreq:
+                        Toast.makeText(getApplicationContext(),"Listar Frequencia Selecionado",Toast.LENGTH_SHORT).show();
                         return true;
                     default:
-                        Toast.makeText(getApplicationContext(),"Somethings Wrong",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"Algo errado",Toast.LENGTH_SHORT).show();
                         return true;
 
                 }
@@ -170,5 +171,20 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setProperMenu(NavigationView navigationView, int code){
+
+        final Menu menu = navigationView.getMenu();
+
+        final SubMenu notas = menu.addSubMenu(0, R.id.nota, 1, "Notas");
+        final SubMenu frequencia = menu.addSubMenu(0, R.id.frequencia, 2, "Frequência");
+
+        if(code == 1) {
+            notas.add(0, R.id.cadnota, 1, "Cadastrar");
+            frequencia.add(0, R.id.cadfreq, 1, "Cadastrar");
+        }
+        notas.add(0, R.id.boletim, 2, "Boletim");
+        frequencia.add(0, R.id.listfreq, 2, "Listar");
     }
 }

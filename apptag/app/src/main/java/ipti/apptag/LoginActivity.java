@@ -46,7 +46,6 @@ public class LoginActivity extends Signin
                     @Override
                     public void onFinish(){
                         progressBar.dismiss();
-//                        setContentView(R.layout.password_activity_login);
                         Intent intent = new Intent(LoginActivity.this, PasswordActivity.class);
                         intent.putExtra("username", text_user.getText().toString());
                         LoginActivity.this.startActivity(intent);
