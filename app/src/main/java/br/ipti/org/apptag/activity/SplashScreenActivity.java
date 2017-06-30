@@ -5,7 +5,6 @@ package br.ipti.org.apptag.activity;
  */
 
 
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,7 +15,7 @@ import ipti.apptag.R;
 public class SplashScreenActivity extends Activity {
 
     // Splash screen timer
-    private static int SPLASH_TIME_OUT = 1000;
+    private static int SPLASH_TIME_OUT = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +33,8 @@ public class SplashScreenActivity extends Activity {
             public void run() {
                 // This method will be executed once the timer is over
                 // Start your app main activity
-                Intent i = new Intent(SplashScreenActivity.this, LoginActivity.class);
-                startActivity(i);
-                SplashScreenActivity.this.overridePendingTransition(R.anim.pull_in_from_left, R.anim.hold);
+                startActivity(new Intent(SplashScreenActivity.this, WebViewActivity.class));
+//                SplashScreenActivity.this.overridePendingTransition(R.anim.pull_in_from_left, R.anim.hold);
 
                 // close this activity
                 finish();
