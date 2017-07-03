@@ -16,4 +16,11 @@
     <string name="closeDrawer">Navigation View</string>
     <string name="openDrawer">Navigation View Closed</string>
     <string name="acao_configuracoes">Configurações</string>
+    <string name="cpf">CPF</string>
+    <string name="password">Senha</string>
+    <string name="login">Acessar</string>
+    <string name="frequency">Frequência</string>
+    <string name="grades">Notas</string>
+    <string name="school_report">Boletim Escolar</string>
+    <string name="logout">Sair</string>
 </resources>
