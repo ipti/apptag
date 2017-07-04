@@ -34,6 +34,7 @@ public class SplashScreenActivity extends Activity {
                 // This method will be executed once the timer is over
                 // Start your app main activity
                 startActivity(new Intent(SplashScreenActivity.this, SchoolReportActivity.class));
+//                startActivity(new Intent(SplashScreenActivity.this, WebViewActivity.class));
 //                SplashScreenActivity.this.overridePendingTransition(R.anim.pull_in_from_left, R.anim.hold);
 
                 // close this activity
