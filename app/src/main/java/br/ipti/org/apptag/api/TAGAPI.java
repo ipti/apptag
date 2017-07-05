@@ -6,8 +6,9 @@ import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import br.ipti.org.apptag.models.CredentialsReturn;
+import br.ipti.org.apptag.models.LoginReturn;
 import br.ipti.org.apptag.models.SchoolReportReturn;
+import br.ipti.org.apptag.models.UserInfoReturn;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
@@ -59,14 +60,17 @@ public class TAGAPI {
     }
 
     public interface TAGInterfaceAPI {
-        // --------------- USERS ------------------ //
+        // --------------- LOGIN ------------------ //
         @FormUrlEncoded
-        @POST("login")
-        Call<ArrayList<CredentialsReturn>> getCredentials(@Field("username") String username, @Field("password") String password);
+        @POST("parent/login")
+        Call<ArrayList<LoginReturn>> getLogin(@Field("username") String username, @Field("password") String password);
+
+        // --------------- USERS ------------------ //
+        @GET("user/info/{username}")
+        Call<ArrayList<UserInfoReturn>> getUserInfo(@Path("username") String username);
 
         // --------------- STUDENT ------------------ //
-        @GET("student/parent/{responsable_cpf}/{send_year}")
-        Call<ArrayList<SchoolReportReturn>> getStudentParent(@Path("responsable_cpf") String responsable_cpf,
-                                                             @Path("send_year") String send_year);
+        @GET("student/parent/{responsable_cpf}")
+        Call<ArrayList<SchoolReportReturn>> getStudentParent(@Path("responsable_cpf") String responsable_cpf);
     }
 }

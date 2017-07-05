@@ -6,11 +6,11 @@ import java.util.ArrayList;
  * Created by Filipi Andrade on 04-Jul-17.
  */
 
-public class CredentialsReturn {
+public class LoginReturn {
 
     private boolean valid;
     private ArrayList<String> error;
-    private ArrayList<Credentials> credentials;
+    private ArrayList<Login> login;
 
     public boolean isValid() {
         return valid;
@@ -28,11 +28,11 @@ public class CredentialsReturn {
         this.error = error;
     }
 
-    public ArrayList<Credentials> getCredentials() {
-        return credentials;
+    public ArrayList<Login> getLogin() {
+        return login;
     }
 
-    public void setCredentials(ArrayList<Credentials> credentials) {
-        this.credentials = credentials;
+    public void setLogin(ArrayList<Login> login) {
+        this.login = login;
     }
 }
