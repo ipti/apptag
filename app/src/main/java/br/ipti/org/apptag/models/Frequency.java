@@ -5,4 +5,6 @@ package br.ipti.org.apptag.models;
  */
 
 public class Frequency {
+
+
 }

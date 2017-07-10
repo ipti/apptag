@@ -11,6 +11,7 @@ public class StudentReport {
     private String classroom_id;
     private String classroom_name;
     private String situation;
+    private String enrollment_fk;
 
     public String getId() {
         return id;
@@ -50,5 +51,14 @@ public class StudentReport {
 
     public void setSituation(String situation) {
         this.situation = situation;
+    }
+
+
+    public String getEnrollment_fk() {
+        return enrollment_fk;
+    }
+
+    public void setEnrollment_fk(String enrollment_fk) {
+        this.enrollment_fk = enrollment_fk;
     }
 }

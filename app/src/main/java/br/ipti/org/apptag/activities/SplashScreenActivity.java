@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import br.ipti.org.apptag.R;
+import br.ipti.org.apptag.extras.SavedSharedPreferences;
 
 public class SplashScreenActivity extends Activity {
 
@@ -33,10 +34,13 @@ public class SplashScreenActivity extends Activity {
             public void run() {
                 // This method will be executed once the timer is over
                 // Start your app main activity
-                startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
+                String username = SavedSharedPreferences.getUsername(SplashScreenActivity.this);
+                if (username.length() == 0) {
+                    startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
 //                startActivity(new Intent(SplashScreenActivity.this, WebViewActivity.class));
-//                SplashScreenActivity.this.overridePendingTransition(R.anim.pull_in_from_left, R.anim.hold);
-
+                } else {
+                    startActivity(new Intent(SplashScreenActivity.this, SchoolReportActivity.class));
+                }
                 // close this activity
                 finish();
             }

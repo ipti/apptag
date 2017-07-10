@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import br.ipti.org.apptag.models.GradeReturn;
 import br.ipti.org.apptag.models.LoginReturn;
 import br.ipti.org.apptag.models.SchoolReportReturn;
 import br.ipti.org.apptag.models.UserInfoReturn;
@@ -72,5 +73,9 @@ public class TAGAPI {
         // --------------- STUDENT ------------------ //
         @GET("student/parent/{responsable_cpf}")
         Call<ArrayList<SchoolReportReturn>> getStudentParent(@Path("responsable_cpf") String responsable_cpf);
+
+        // --------------- GRADE ------------------ //
+        @GET("grade/{enrollment_fk}/{classroom_fk}")
+        Call<ArrayList<GradeReturn>> getGrade(@Path("enrollment_fk") String enrollment_fk, @Path("classroom_fk") String classroom_fk);
     }
 }

@@ -3,6 +3,7 @@ package br.ipti.org.apptag.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -27,16 +28,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private EditText edtCPF, edtPassword;
     private Button btnLogin;
+    private Typeface mTypeface;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        //TYPEFACE
+        mTypeface = Typeface.createFromAsset(getResources().getAssets(), "font/Lato-Regular.ttf");
+
         //INIT
         edtCPF = (EditText) findViewById(R.id.edtCPF);
+        edtCPF.setTypeface(mTypeface);
         edtPassword = (EditText) findViewById(R.id.edtPassword);
+        edtPassword.setTypeface(mTypeface);
         btnLogin = (Button) findViewById(R.id.btnLogin);
+        btnLogin.setTypeface(mTypeface);
 
         btnLogin.setOnClickListener(this);
     }

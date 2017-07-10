@@ -10,7 +10,7 @@ public class GradeReturn {
 
     private boolean valid;
     private ArrayList<String> error;
-    private ArrayList<Grade> frequency;
+    private ArrayList<Grade> grade;
 
     public boolean isValid() {
         return valid;
@@ -28,11 +28,11 @@ public class GradeReturn {
         this.error = error;
     }
 
-    public ArrayList<Grade> getFrequency() {
-        return frequency;
+    public ArrayList<Grade> getGrade() {
+        return grade;
     }
 
-    public void setFrequency(ArrayList<Grade> frequency) {
-        this.frequency = frequency;
+    public void setGrade(ArrayList<Grade> grade) {
+        this.grade = grade;
     }
 }

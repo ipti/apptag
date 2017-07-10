@@ -1,11 +1,13 @@
 package br.ipti.org.apptag.activities;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -33,11 +35,17 @@ public class SchoolReportActivity extends AppCompatActivity {
     private SchoolReportAdapter mSchoolReportAdapter;
     private TextView tvUsername;
     private ArrayList<SchoolReport> mSchoolReports;
+    private Typeface mTypeface;
+
+    private String TAG = "TAG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_school_report);
+
+        //TYPEFACE
+        mTypeface = Typeface.createFromAsset(getResources().getAssets(), "font/Lato-Bold.ttf");
 
         //TOOLBAR
         mToolbar = (Toolbar) findViewById(R.id.tbSchoolReport);
@@ -58,6 +66,7 @@ public class SchoolReportActivity extends AppCompatActivity {
 
         //TEXT VIEW
         tvUsername = (TextView) findViewById(R.id.tvUsername);
+        tvUsername.setTypeface(mTypeface);
 
         //API
         TAGAPI.TAGInterfaceAPI tagInterfaceAPI = TAGAPI.getClient();
@@ -69,7 +78,18 @@ public class SchoolReportActivity extends AppCompatActivity {
                 try {
                     if (response.body() != null) {
                         if (response.body().get(0).isValid()) {
-                            tvUsername.setText(response.body().get(0).getUser().get(0).getName());
+                            String aux = response.body().get(0).getUser().get(0).getName().toLowerCase();
+                            StringBuffer stringBuffer = new StringBuffer();
+                            String[] part = aux.split(" ");
+                            for (String str : part) {
+                                char[] c = str.trim().toCharArray();
+                                c[0] = Character.toUpperCase(c[0]);
+                                str = new String(c);
+
+                                stringBuffer.append(str).append(" ");
+                            }
+
+                            tvUsername.setText(stringBuffer);
                         }
                     }
                 } catch (Exception e) {
@@ -124,6 +144,7 @@ public class SchoolReportActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_logout:
+                SavedSharedPreferences.logout(this);
                 startActivity(new Intent(this, LoginActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
                 break;

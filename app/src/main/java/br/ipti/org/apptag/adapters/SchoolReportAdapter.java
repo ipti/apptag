@@ -1,6 +1,7 @@
 package br.ipti.org.apptag.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,10 +25,12 @@ public class SchoolReportAdapter extends RecyclerView.Adapter<SchoolReportAdapte
 
     private Context mContext;
     private ArrayList<SchoolReport> mList;
+    private Typeface mTypeface;
 
     public SchoolReportAdapter(Context c, ArrayList<SchoolReport> l) {
         this.mContext = c;
         this.mList = l;
+        this.mTypeface = Typeface.createFromAsset(mContext.getResources().getAssets(), "font/Lato-Regular.ttf");
     }
 
     @Override
@@ -59,6 +62,7 @@ public class SchoolReportAdapter extends RecyclerView.Adapter<SchoolReportAdapte
             viewYear = (View) itemView.findViewById(R.id.viewYear);
             ivRightDown = (ImageView) itemView.findViewById(R.id.ivRightDown);
             tvYear = (TextView) itemView.findViewById(R.id.tvYear);
+            tvYear.setTypeface(mTypeface);
             rvStudentReport = (RecyclerView) itemView.findViewById(R.id.rvStudentReport);
             rvStudentReport.setHasFixedSize(true);
             rvStudentReport.setLayoutManager(new LinearLayoutManager(mContext));

@@ -19,7 +19,7 @@ import br.ipti.org.apptag.models.SchoolReport;
  * Created by Filipi Andrade on 01-Jul-17.
  */
 
-public class FrequencyAdapter extends RecyclerView.Adapter<FrequencyAdapter.SchoolReportViewHolder> {
+public class FrequencyAdapter extends RecyclerView.Adapter<FrequencyAdapter.FrequencyViewHolder> {
 
     private Context mContext;
     private ArrayList<Frequency> mList;
@@ -30,13 +30,13 @@ public class FrequencyAdapter extends RecyclerView.Adapter<FrequencyAdapter.Scho
     }
 
     @Override
-    public SchoolReportViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public FrequencyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(mContext).inflate(R.layout.item_frequency, parent, false);
-        return new SchoolReportViewHolder(v);
+        return new FrequencyViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(SchoolReportViewHolder holder, int position) {
+    public void onBindViewHolder(FrequencyViewHolder holder, int position) {
 //        holder.tvYear.setText(mList.get(position).getYear());
     }
 
@@ -45,10 +45,10 @@ public class FrequencyAdapter extends RecyclerView.Adapter<FrequencyAdapter.Scho
         return mList.size();
     }
 
-    public class SchoolReportViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class FrequencyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
 
-        public SchoolReportViewHolder(View itemView) {
+        public FrequencyViewHolder(View itemView) {
             super(itemView);
 
             itemView.setOnClickListener(this);
