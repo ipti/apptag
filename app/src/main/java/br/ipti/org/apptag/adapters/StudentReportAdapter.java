@@ -103,7 +103,9 @@ public class StudentReportAdapter extends RecyclerView.Adapter<StudentReportAdap
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.rlFrequency:
-                    mContext.startActivity(new Intent(mContext, FrequencyActivity.class));
+                    mContext.startActivity(new Intent(mContext, FrequencyActivity.class)
+                            .putExtra("student_fk", mList.get(getAdapterPosition()).getId())
+                            .putExtra("classroom_fk", mList.get(getAdapterPosition()).getClassroom_id()));
                     break;
                 case R.id.rlGrades:
                     //API

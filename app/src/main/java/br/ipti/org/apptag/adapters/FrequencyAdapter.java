@@ -1,6 +1,7 @@
 package br.ipti.org.apptag.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +14,8 @@ import java.util.ArrayList;
 
 import br.ipti.org.apptag.R;
 import br.ipti.org.apptag.models.Frequency;
+import br.ipti.org.apptag.models.FrequencyClass;
+import br.ipti.org.apptag.models.FrequencyStudent;
 import br.ipti.org.apptag.models.SchoolReport;
 
 /**
@@ -22,11 +25,15 @@ import br.ipti.org.apptag.models.SchoolReport;
 public class FrequencyAdapter extends RecyclerView.Adapter<FrequencyAdapter.FrequencyViewHolder> {
 
     private Context mContext;
-    private ArrayList<Frequency> mList;
+    private ArrayList<FrequencyClass> mListClass;
+    private ArrayList<FrequencyStudent> mListStudent;
+    private Typeface mTypeface;
 
-    public FrequencyAdapter(Context c, ArrayList<Frequency> l) {
+    public FrequencyAdapter(Context c, ArrayList<FrequencyClass> cs, ArrayList<FrequencyStudent> s) {
         this.mContext = c;
-        this.mList = l;
+        this.mListClass = cs;
+        this.mListStudent = s;
+        this.mTypeface = Typeface.createFromAsset(mContext.getResources().getAssets(), "font/Lato-Regular.ttf");
     }
 
     @Override
@@ -37,21 +44,30 @@ public class FrequencyAdapter extends RecyclerView.Adapter<FrequencyAdapter.Freq
 
     @Override
     public void onBindViewHolder(FrequencyViewHolder holder, int position) {
-//        holder.tvYear.setText(mList.get(position).getYear());
+        holder.tvDisciplineName.setText(mListClass.get(position).getDiscipline_name());
+
+        int presence = mListClass.get(position).getClasses() - mListStudent.get(position).getFaults();
+        double percent = ((Double.valueOf(presence)/Double.valueOf(mListClass.get(position).getClasses())) * 1000)/10;
+
+        holder.tvPercent.setText(percent + "%");
     }
 
     @Override
     public int getItemCount() {
-        return mList.size();
+        return mListClass.size();
     }
 
     public class FrequencyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        TextView tvDisciplineName, tvPercent;
 
         public FrequencyViewHolder(View itemView) {
             super(itemView);
 
-            itemView.setOnClickListener(this);
+            tvDisciplineName = (TextView) itemView.findViewById(R.id.tvDisciplineName);
+            tvDisciplineName.setTypeface(mTypeface);
+            tvPercent = (TextView) itemView.findViewById(R.id.tvPercent);
+            tvPercent.setTypeface(mTypeface);
         }
 
         @Override

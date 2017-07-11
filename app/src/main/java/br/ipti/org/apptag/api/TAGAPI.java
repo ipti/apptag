@@ -6,6 +6,8 @@ import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import br.ipti.org.apptag.models.FrequencyClassStudentReturn;
+import br.ipti.org.apptag.models.FrequencyReturn;
 import br.ipti.org.apptag.models.GradeReturn;
 import br.ipti.org.apptag.models.LoginReturn;
 import br.ipti.org.apptag.models.SchoolReportReturn;
@@ -64,7 +66,8 @@ public class TAGAPI {
         // --------------- LOGIN ------------------ //
         @FormUrlEncoded
         @POST("parent/login")
-        Call<ArrayList<LoginReturn>> getLogin(@Field("username") String username, @Field("password") String password);
+        Call<ArrayList<LoginReturn>> getLogin(@Field("username") String username,
+                                              @Field("password") String password);
 
         // --------------- USERS ------------------ //
         @GET("user/info/{username}")
@@ -76,6 +79,13 @@ public class TAGAPI {
 
         // --------------- GRADE ------------------ //
         @GET("grade/{enrollment_fk}/{classroom_fk}")
-        Call<ArrayList<GradeReturn>> getGrade(@Path("enrollment_fk") String enrollment_fk, @Path("classroom_fk") String classroom_fk);
+        Call<ArrayList<GradeReturn>> getGrade(@Path("enrollment_fk") String enrollment_fk,
+                                              @Path("classroom_fk") String classroom_fk);
+
+        // --------------- FREQUENCY ------------------ //
+        @GET("frequency/{student_fk}/{classroom_fk}/{month}")
+        Call<ArrayList<FrequencyClassStudentReturn>> getFrequency(@Path("student_fk") String student_fk,
+                                                                  @Path("classroom_fk") String classroom_fk,
+                                                                  @Path("month") String month);
     }
 }
