@@ -1,6 +1,10 @@
 package br.ipti.org.apptag.activities;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +29,7 @@ import java.util.ArrayList;
 import br.ipti.org.apptag.R;
 import br.ipti.org.apptag.adapters.FrequencyAdapter;
 import br.ipti.org.apptag.api.TAGAPI;
+import br.ipti.org.apptag.extras.SavedSharedPreferences;
 import br.ipti.org.apptag.models.FrequencyClassStudentReturn;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,6 +44,7 @@ public class FrequencyActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
 
     private String TAG = "TAG", student_fk, month, classroom_fk;
+    private boolean grades;
     private static final String[] MONTHS = new String[]{
             "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
     };
@@ -52,6 +59,7 @@ public class FrequencyActivity extends AppCompatActivity {
         if (bundle != null) {
             student_fk = bundle.getString("student_fk");
             classroom_fk = bundle.getString("classroom_fk");
+            grades = bundle.getBoolean("grades");
             month = "1";
         }
 
@@ -61,13 +69,23 @@ public class FrequencyActivity extends AppCompatActivity {
         //TOOLBAR
         mToolbar = (Toolbar) findViewById(R.id.tbFrequency);
         mToolbar.setTitle(R.string.frequency);
+        mToolbar.setTitleTextColor(getResources().getColor(R.color.colorIcons));
         setSupportActionBar(mToolbar);
+        final Drawable upArrow = getResources().getDrawable(R.drawable.abc_ic_ab_back_material);
+        upArrow.setColorFilter(getResources().getColor(R.color.colorIcons), PorterDuff.Mode.SRC_ATOP);
+        getSupportActionBar().setHomeAsUpIndicator(upArrow);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //RECYCLER VIEW
         mRecyclerView = (RecyclerView) findViewById(R.id.rvFrequency);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        //PROGRESS DIALOG
+        final ProgressDialog progressDialog = new ProgressDialog(FrequencyActivity.this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Espero um momento...");
+        progressDialog.show();
 
         //API
         TAGAPI.TAGInterfaceAPI tagInterfaceAPI = TAGAPI.getClient();
@@ -80,22 +98,27 @@ public class FrequencyActivity extends AppCompatActivity {
                         if (response.body().get(0).isValid()) {
                             mFrequencyAdapter = new FrequencyAdapter(FrequencyActivity.this, response.body().get(0).getFrequency_class(), response.body().get(0).getFrequency_student());
                             mRecyclerView.setAdapter(mFrequencyAdapter);
+                            progressDialog.dismiss();
                         } else {
-                            Toast.makeText(FrequencyActivity.this, "Esse aluno não possui frequência cadastrada!", Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
+                            Toast.makeText(FrequencyActivity.this, "O aluno não possui frequência cadastrada no mês escolhido!", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(FrequencyActivity.this, "Esse aluno não possui frequência cadastrada!", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                        Toast.makeText(FrequencyActivity.this, "O aluno não possui frequência cadastrada no mês escolhido!", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(FrequencyActivity.this, "Esse aluno não possui frequência cadastrada!", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                    Toast.makeText(FrequencyActivity.this, "O aluno não possui frequência cadastrada no mês escolhido!", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ArrayList<FrequencyClassStudentReturn>> call, Throwable t) {
                 t.printStackTrace();
-                Toast.makeText(FrequencyActivity.this, "Esse aluno não possui frequência cadastrada!", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+                Toast.makeText(FrequencyActivity.this, "O aluno não possui frequência cadastrada no mês escolhido!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -125,18 +148,79 @@ public class FrequencyActivity extends AppCompatActivity {
         bsMonths.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mRecyclerView.setAdapter(null);
+                month = String.valueOf(position + 1);
+                arrayAdapter.notifyDataSetChanged();
 
+                final ProgressDialog progressDialog = new ProgressDialog(FrequencyActivity.this);
+                progressDialog.setIndeterminate(true);
+                progressDialog.setMessage("Espero um momento...");
+                progressDialog.show();
+
+                //API
+                TAGAPI.TAGInterfaceAPI tagInterfaceAPI = TAGAPI.getClient();
+                Call<ArrayList<FrequencyClassStudentReturn>> call = tagInterfaceAPI.getFrequency(student_fk, classroom_fk, month);
+                call.enqueue(new Callback<ArrayList<FrequencyClassStudentReturn>>() {
+                    @Override
+                    public void onResponse(Call<ArrayList<FrequencyClassStudentReturn>> call, Response<ArrayList<FrequencyClassStudentReturn>> response) {
+                        try {
+                            if (response.body() != null) {
+                                if (response.body().get(0).isValid()) {
+                                    mFrequencyAdapter = new FrequencyAdapter(FrequencyActivity.this, response.body().get(0).getFrequency_class(), response.body().get(0).getFrequency_student());
+                                    mRecyclerView.setAdapter(mFrequencyAdapter);
+                                    progressDialog.dismiss();
+                                } else {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(FrequencyActivity.this, "O aluno não possui frequência cadastrada no mês escolhido!", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                progressDialog.dismiss();
+                                Toast.makeText(FrequencyActivity.this, "O aluno não possui frequência cadastrada no mês escolhido!", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            progressDialog.dismiss();
+                            e.printStackTrace();
+                            Toast.makeText(FrequencyActivity.this, "O aluno não possui frequência cadastrada no mês escolhido!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ArrayList<FrequencyClassStudentReturn>> call, Throwable t) {
+                        t.printStackTrace();
+                        progressDialog.dismiss();
+                        Toast.makeText(FrequencyActivity.this, "O aluno não possui frequência cadastrada no mês escolhido!", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_frequency, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == android.R.id.home) {
-            finish();
+        switch (id) {
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.menu_grade:
+                if (grades) {
+                    finish();
+                } else {
+                    startActivity(new Intent(this, GradesActivity.class)
+                            .putExtra("student_fk", student_fk)
+                            .putExtra("classroom_fk", classroom_fk)
+                            .putExtra("frequency", true));
+                }
+                break;
         }
+
         return super.onOptionsItemSelected(item);
     }
 

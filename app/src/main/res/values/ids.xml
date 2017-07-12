@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <item name="nota" type="id"/>
-    <item name="cadnota" type="id"/>
-    <item name="boletim" type="id"/>
-    <item name="frequencia" type="id"/>
-    <item name="cadfreq" type="id"/>
-    <item name="listfreq" type="id"/>
-</resources>

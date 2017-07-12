@@ -33,4 +33,5 @@
     <string name="gradeFinalRec">Rec. Final</string>
     <string name="approved">Aprovado</string>
     <string name="disapproved">Reprovado</string>
+    <string name="all_disciplines">Todas as Disciplinas</string>
 </resources>

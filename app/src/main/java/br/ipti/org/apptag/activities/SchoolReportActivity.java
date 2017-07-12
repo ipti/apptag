@@ -1,5 +1,6 @@
 package br.ipti.org.apptag.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
@@ -50,6 +51,7 @@ public class SchoolReportActivity extends AppCompatActivity {
         //TOOLBAR
         mToolbar = (Toolbar) findViewById(R.id.tbSchoolReport);
         mToolbar.setTitle(R.string.school_report);
+        mToolbar.setTitleTextColor(getResources().getColor(R.color.colorIcons));
         setSupportActionBar(mToolbar);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -62,46 +64,20 @@ public class SchoolReportActivity extends AppCompatActivity {
         mSchoolReports = new ArrayList<>();
 
         //SAVED SHARED PREFERENCES
-        String username = SavedSharedPreferences.getUsername(this);
+        final String username = SavedSharedPreferences.getUsername(this);
 
         //TEXT VIEW
         tvUsername = (TextView) findViewById(R.id.tvUsername);
         tvUsername.setTypeface(mTypeface);
 
+        //PROGRESS DIALOG
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Obtendo dados...");
+        progressDialog.show();
+
         //API
-        TAGAPI.TAGInterfaceAPI tagInterfaceAPI = TAGAPI.getClient();
-
-        Call<ArrayList<UserInfoReturn>> callUserInfo = tagInterfaceAPI.getUserInfo(username);
-        callUserInfo.enqueue(new Callback<ArrayList<UserInfoReturn>>() {
-            @Override
-            public void onResponse(Call<ArrayList<UserInfoReturn>> call, Response<ArrayList<UserInfoReturn>> response) {
-                try {
-                    if (response.body() != null) {
-                        if (response.body().get(0).isValid()) {
-                            String aux = response.body().get(0).getUser().get(0).getName().toLowerCase();
-                            StringBuffer stringBuffer = new StringBuffer();
-                            String[] part = aux.split(" ");
-                            for (String str : part) {
-                                char[] c = str.trim().toCharArray();
-                                c[0] = Character.toUpperCase(c[0]);
-                                str = new String(c);
-
-                                stringBuffer.append(str).append(" ");
-                            }
-
-                            tvUsername.setText(stringBuffer);
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<UserInfoReturn>> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
+        final TAGAPI.TAGInterfaceAPI tagInterfaceAPI = TAGAPI.getClient();
 
         Call<ArrayList<SchoolReportReturn>> call = tagInterfaceAPI.getStudentParent(username);
         call.enqueue(new Callback<ArrayList<SchoolReportReturn>>() {
@@ -112,16 +88,53 @@ public class SchoolReportActivity extends AppCompatActivity {
                         if (response.body().get(0).isValid()) {
                             mSchoolReports = response.body().get(0).getSchoolReports();
 
-                            mSchoolReportAdapter = new SchoolReportAdapter(SchoolReportActivity.this, mSchoolReports);
-                            mRecyclerView.setAdapter(mSchoolReportAdapter);
+                            Call<ArrayList<UserInfoReturn>> callUserInfo = tagInterfaceAPI.getUserInfo(username);
+                            callUserInfo.enqueue(new Callback<ArrayList<UserInfoReturn>>() {
+                                @Override
+                                public void onResponse(Call<ArrayList<UserInfoReturn>> call, Response<ArrayList<UserInfoReturn>> response) {
+                                    try {
+                                        if (response.body() != null) {
+                                            if (response.body().get(0).isValid()) {
+                                                String aux = response.body().get(0).getUser().get(0).getName().toLowerCase();
+                                                StringBuffer stringBuffer = new StringBuffer();
+                                                String[] part = aux.split(" ");
+                                                for (String str : part) {
+                                                    char[] c = str.trim().toCharArray();
+                                                    c[0] = Character.toUpperCase(c[0]);
+                                                    str = new String(c);
+
+                                                    stringBuffer.append(str).append(" ");
+                                                }
+
+                                                tvUsername.setText(stringBuffer);
+
+                                                mSchoolReportAdapter = new SchoolReportAdapter(SchoolReportActivity.this, mSchoolReports);
+                                                mRecyclerView.setAdapter(mSchoolReportAdapter);
+
+                                                progressDialog.dismiss();
+                                            }
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<ArrayList<UserInfoReturn>> call, Throwable t) {
+                                    t.printStackTrace();
+                                }
+                            });
                         } else {
+                            progressDialog.dismiss();
                             Toast.makeText(SchoolReportActivity.this, "Esse usuário não possui filhos matriculados!", Toast.LENGTH_SHORT).show();
                         }
                     } else {
+                        progressDialog.dismiss();
                         Toast.makeText(SchoolReportActivity.this, "Esse usuário não possui filhos matriculados!", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    progressDialog.dismiss();
                     Toast.makeText(SchoolReportActivity.this, "Esse usuário não possui filhos matriculados!", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -129,6 +142,7 @@ public class SchoolReportActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<ArrayList<SchoolReportReturn>> call, Throwable t) {
                 t.printStackTrace();
+                progressDialog.dismiss();
                 Toast.makeText(SchoolReportActivity.this, "Esse usuário não possui filhos matriculados!", Toast.LENGTH_SHORT).show();
             }
         });

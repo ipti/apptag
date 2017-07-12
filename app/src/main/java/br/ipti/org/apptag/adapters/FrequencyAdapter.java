@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import br.ipti.org.apptag.R;
@@ -44,12 +45,21 @@ public class FrequencyAdapter extends RecyclerView.Adapter<FrequencyAdapter.Freq
 
     @Override
     public void onBindViewHolder(FrequencyViewHolder holder, int position) {
-        holder.tvDisciplineName.setText(mListClass.get(position).getDiscipline_name());
+        try {
+            if (mListClass.get(position).getDiscipline_name() == null) {
+                holder.tvDisciplineName.setText(mContext.getResources().getText(R.string.all_disciplines));
+            } else {
+                holder.tvDisciplineName.setText(mListClass.get(position).getDiscipline_name());
+            }
 
-        int presence = mListClass.get(position).getClasses() - mListStudent.get(position).getFaults();
-        double percent = ((Double.valueOf(presence)/Double.valueOf(mListClass.get(position).getClasses())) * 1000)/10;
-
-        holder.tvPercent.setText(percent + "%");
+            int presence = mListClass.get(position).getClasses() - mListStudent.get(position).getFaults();
+            double percent = (Double.valueOf(presence) / Double.valueOf(mListClass.get(position).getClasses()) * 1000) / 10;
+            DecimalFormat formatter = new DecimalFormat("###.##");
+            String final_percent = formatter.format(percent) + "%";
+            holder.tvPercent.setText(final_percent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
