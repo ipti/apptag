@@ -104,6 +104,7 @@ public class StudentReportAdapter extends RecyclerView.Adapter<StudentReportAdap
             switch (v.getId()) {
                 case R.id.rlFrequency:
                     mContext.startActivity(new Intent(mContext, FrequencyActivity.class)
+                            .putExtra("student_name", mList.get(getAdapterPosition()).getName())
                             .putExtra("student_fk", mList.get(getAdapterPosition()).getId())
                             .putExtra("classroom_fk", mList.get(getAdapterPosition()).getClassroom_id()));
                     break;
@@ -122,6 +123,7 @@ public class StudentReportAdapter extends RecyclerView.Adapter<StudentReportAdap
                                             Toast.makeText(mContext, "Esse aluno não possui notas cadastradas!", Toast.LENGTH_SHORT).show();
                                         } else {
                                             mContext.startActivity(new Intent(mContext, GradesActivity.class)
+                                                    .putExtra("student_name", mList.get(getAdapterPosition()).getName())
                                                     .putExtra("enrollment_fk", mList.get(getAdapterPosition()).getEnrollment_fk())
                                                     .putExtra("classroom_id", mList.get(getAdapterPosition()).getClassroom_id()));
                                         }

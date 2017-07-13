@@ -30,7 +30,7 @@ public class GradesActivity extends AppCompatActivity {
     private GradeAdapter mGradeAdapter;
     private RecyclerView mRecyclerView;
 
-    private String enrollment_fk, classroom_id, TAG = "TAG";
+    private String enrollment_fk, classroom_id, TAG = "TAG", student_name;
     private boolean frequency;
 
     @Override
@@ -40,7 +40,19 @@ public class GradesActivity extends AppCompatActivity {
 
         //BUNDLE
         Bundle bundle = getIntent().getExtras();
+        StringBuffer stringBuffer = new StringBuffer();
         if (bundle != null) {
+            student_name = bundle.getString("student_name");
+            String name = student_name.toLowerCase();
+            String[] part = name.split(" ");
+            for (String str : part) {
+                char[] c = str.trim().toCharArray();
+                c[0] = Character.toUpperCase(c[0]);
+                str = new String(c);
+
+                stringBuffer.append(str).append(" ");
+            }
+
             enrollment_fk = bundle.getString("enrollment_fk");
             if (enrollment_fk == null || enrollment_fk.equals("")) {
                 enrollment_fk = bundle.getString("student_fk");
@@ -62,7 +74,7 @@ public class GradesActivity extends AppCompatActivity {
 
         //TOOLBAR
         mToolbar = (Toolbar) findViewById(R.id.tbGrades);
-        mToolbar.setTitle(R.string.grades);
+        mToolbar.setTitle(getResources().getString(R.string.grades) + " - " + stringBuffer);
         mToolbar.setTitleTextColor(getResources().getColor(R.color.colorIcons));
         setSupportActionBar(mToolbar);
         final Drawable upArrow = getResources().getDrawable(R.drawable.abc_ic_ab_back_material);
@@ -130,6 +142,7 @@ public class GradesActivity extends AppCompatActivity {
                     finish();
                 } else {
                     startActivity(new Intent(this, FrequencyActivity.class)
+                            .putExtra("student_name", student_name)
                             .putExtra("student_fk", enrollment_fk)
                             .putExtra("classroom_fk", classroom_id)
                             .putExtra("grades", true));

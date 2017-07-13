@@ -53,7 +53,7 @@ public class FrequencyAdapter extends RecyclerView.Adapter<FrequencyAdapter.Freq
             }
 
             int presence = mListClass.get(position).getClasses() - mListStudent.get(position).getFaults();
-            double percent = (Double.valueOf(presence) / Double.valueOf(mListClass.get(position).getClasses()) * 1000) / 10;
+            double percent = Math.ceil(Double.valueOf(presence) / Double.valueOf(mListClass.get(position).getClasses()) * 1000) / 10;
             DecimalFormat formatter = new DecimalFormat("###.##");
             String final_percent = formatter.format(percent) + "%";
             holder.tvPercent.setText(final_percent);

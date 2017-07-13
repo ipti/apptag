@@ -43,7 +43,7 @@ public class FrequencyActivity extends AppCompatActivity {
     private FrequencyAdapter mFrequencyAdapter;
     private RecyclerView mRecyclerView;
 
-    private String TAG = "TAG", student_fk, month, classroom_fk;
+    private String TAG = "TAG", student_fk, month, classroom_fk, student_name;
     private boolean grades;
     private static final String[] MONTHS = new String[]{
             "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
@@ -56,7 +56,19 @@ public class FrequencyActivity extends AppCompatActivity {
 
         //BUNDLE
         Bundle bundle = getIntent().getExtras();
+        StringBuffer stringBuffer = new StringBuffer();
         if (bundle != null) {
+            student_name = bundle.getString("student_name");
+            String name = student_name.toLowerCase();
+            String[] part = name.split(" ");
+            for (String str : part) {
+                char[] c = str.trim().toCharArray();
+                c[0] = Character.toUpperCase(c[0]);
+                str = new String(c);
+
+                stringBuffer.append(str).append(" ");
+            }
+
             student_fk = bundle.getString("student_fk");
             classroom_fk = bundle.getString("classroom_fk");
             grades = bundle.getBoolean("grades");
@@ -68,7 +80,7 @@ public class FrequencyActivity extends AppCompatActivity {
 
         //TOOLBAR
         mToolbar = (Toolbar) findViewById(R.id.tbFrequency);
-        mToolbar.setTitle(R.string.frequency);
+        mToolbar.setTitle(getResources().getString(R.string.frequency) + " - " + stringBuffer);
         mToolbar.setTitleTextColor(getResources().getColor(R.color.colorIcons));
         setSupportActionBar(mToolbar);
         final Drawable upArrow = getResources().getDrawable(R.drawable.abc_ic_ab_back_material);
@@ -214,6 +226,7 @@ public class FrequencyActivity extends AppCompatActivity {
                     finish();
                 } else {
                     startActivity(new Intent(this, GradesActivity.class)
+                            .putExtra("student_name", student_name)
                             .putExtra("student_fk", student_fk)
                             .putExtra("classroom_fk", classroom_fk)
                             .putExtra("frequency", true));
