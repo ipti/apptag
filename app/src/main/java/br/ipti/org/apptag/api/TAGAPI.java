@@ -30,7 +30,7 @@ import retrofit2.http.Path;
 
 public class TAGAPI {
 
-    private static final String BASE_URL = "http://10.0.2.2:9090/api-tag/";
+    private static final String BASE_URL = "https://api-tag.ipti.org.br/api-tag/";
     private static TAGInterfaceAPI mTagInterfaceAPI;
 
     public static TAGInterfaceAPI getClient() {
